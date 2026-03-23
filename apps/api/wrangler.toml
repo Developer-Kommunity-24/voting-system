@@ -7,4 +7,4 @@ port = 8000
 [[d1_databases]]
 binding = "DB"
 database_name = "vote-system"
-database_id = "fdc3ad50-8fee-44ac-bc57-ad3ed620fb21"
+database_id = "832b59da-1bf5-45cf-b5d1-b4935b625394"
