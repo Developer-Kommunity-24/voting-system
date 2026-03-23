@@ -1,0 +1,6 @@
+node_modules
+.turbo
+.wrangler
+dist
+.env
+pnpm-debug.log
