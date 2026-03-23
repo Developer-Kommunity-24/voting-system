@@ -1,7 +1,13 @@
 {
-  "name": "voting-system-root",
+  "name": "voting-system",
   "private": true,
-  "engines": {
-    "node": ">=18"
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "turbo": "latest"
   }
 }

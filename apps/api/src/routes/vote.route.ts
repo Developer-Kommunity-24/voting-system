@@ -6,5 +6,4 @@ import { createVote } from '../controllers/vote.Controller'
 const vote = new Hono<AppEnv>()
 
 vote.post('/', requireAuth, createVote)
-
 export default vote
