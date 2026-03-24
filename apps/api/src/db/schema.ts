@@ -12,9 +12,12 @@ export const stalls = sqliteTable('stalls', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
   description: text('description'),
-  logo: text('logo'), // ✅ added
+  logo: text('logo'),
+  qrSlug: text('qr_slug').notNull(), // ✅ added
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
-});
+}, (table) => ({
+  qrSlugIdx: uniqueIndex('qr_slug_unique').on(table.qrSlug), // ✅ unique index
+}));
 
 export const ratings = sqliteTable('ratings', {
   id: integer('id').primaryKey({ autoIncrement: true }),
