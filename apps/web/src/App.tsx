@@ -45,11 +45,7 @@ export default function App() {
 
   // Sync user to DB after Clerk sign-in
   useEffect(() => {
-    if (!isSignedIn) {
-      setSynced(false);
-      return;
-    }
-    if (synced) return;
+    if (!isSignedIn || synced) return;
 
     const sync = async () => {
       try {
