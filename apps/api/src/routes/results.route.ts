@@ -1,40 +1,26 @@
 import { Hono } from 'hono';
 import { getDb } from '../db/client';
-import { stalls, ratings, users } from '../db/schema';
-import { eq, sum, count, gte, inArray } from 'drizzle-orm';
+import { stalls, ratings } from '../db/schema';
+import { eq } from 'drizzle-orm';
 import type { AppEnv } from '../types';
-
+import { refreshStallAggregates } from '../services/stalls.Service';
 const resultsRoutes = new Hono<AppEnv>();
 
 resultsRoutes.get('/', async (c) => {
   try {
     const db = getDb(c.env.DB);
     const allStalls = await db.select().from(stalls);
-    const validScores = await db
-      .select({
-        stallId: ratings.stallId,
-        totalScore: sum(ratings.rating).mapWith(Number),
-      })
-      .from(ratings)
-      .where(
-        inArray(
-          ratings.userId,
-          db
-            .select({ userId: ratings.userId })
-            .from(ratings)
-            .groupBy(ratings.userId)
-            .having(gte(count(ratings.userId), 12))
-        )
-      )
-      .groupBy(ratings.stallId);
+    const stallIds = allStalls.map(s => s.id);
 
-    const scoreMap = new Map(validScores.map((s: { stallId: number | null, totalScore: number }) => [s.stallId, s.totalScore || 0]));
+    // Refresh all stalls to ensure consistency (optional but good for a "Results" view)
+    // In a high-traffic app, we might skip this and just read, but for this event, real-time-consistent view is best.
+    await refreshStallAggregates(c.env.DB, stallIds);
 
-    const finalResults = allStalls.map((stall: typeof stalls.$inferSelect) => ({
-      id: stall.id,
-      name: stall.name,
-      score: scoreMap.get(stall.id) || 0
-    })).sort((a: { score: number }, b: { score: number }) => b.score - a.score);
+    // Fetch the updated data
+    const finalResults = await db.select().from(stalls);
+    
+    // Sort by qualifiedRatingSum descending for the leaderboard
+    finalResults.sort((a, b) => (b.qualifiedRatingSum || 0) - (a.qualifiedRatingSum || 0));
 
     return c.json({
       success: true,

@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, uniqueIndex, real } from 'drizzle-orm/sqlite-core';
 
 export const users = sqliteTable('users', {
   id: text('id').primaryKey(),
@@ -13,7 +13,12 @@ export const stalls = sqliteTable('stalls', {
   name: text('name').notNull(),
   description: text('description'),
   logo: text('logo'),
-  qrSlug: text('qr_slug').unique().notNull(), // ✅ clean unique
+  qrSlug: text('qr_slug').unique().notNull(),
+  totalVoters: integer('total_voters').default(0),
+  qualifiedVoters: integer('qualified_voters').default(0),
+  qualifiedRatingSum: integer('qualified_rating_sum').default(0),
+  nonQualifiedRatingSum: integer('non_qualified_rating_sum').default(0),
+  qualifiedAvgRating: real('qualified_avg_rating').default(0),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 

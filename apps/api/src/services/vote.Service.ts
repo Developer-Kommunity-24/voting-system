@@ -4,7 +4,7 @@ import { ratings, users } from '../db/schema'
 import { eq, count } from 'drizzle-orm'
 import type { AppEnv } from '../types'
 import { ensureUserExists } from './user.Service'
-
+import { refreshStallAggregates } from './stalls.Service'
 export const submitVote = async (
   env: AppEnv['Bindings'],
   userId: string,
@@ -40,6 +40,24 @@ export const submitVote = async (
         .update(users)
         .set({ completed: true })
         .where(eq(users.id, userId))
+    }
+
+    // Update stall aggregates immediately
+    if (progressCount === 12) {
+      // User just became qualified! All their stalls need refreshing
+      const userRatings = await ormDb
+        .select({ stallId: ratings.stallId })
+        .from(ratings)
+        .where(eq(ratings.userId, userId));
+      
+      const stallIds = userRatings
+        .map(r => r.stallId)
+        .filter((id): id is number => id !== null);
+      
+      await refreshStallAggregates(env.DB, stallIds);
+    } else {
+      // Normal vote (could be qualified or not, but only this stall is affected)
+      await refreshStallAggregates(env.DB, [stallId]);
     }
 
     return progressCount
