@@ -17,7 +17,7 @@ type Screen = 'login' | 'auth' | 'rating' | 'progress' | 'scanner' | 'completion
 const API_BASE = (import.meta.env.VITE_API_URL ?? 'http://localhost:8000').replace(/\/$/, '');
 
 export default function App() {
-  const { isSignedIn, getToken } = useAuth();
+  const { isLoaded, isSignedIn, getToken } = useAuth();
   const { user } = useUser();
 
   const [currentScreen, setCurrentScreen] = useState<Screen>('login');
@@ -282,6 +282,14 @@ export default function App() {
       setCurrentScreen('progress');
     }
   };
+
+  if (!isLoaded) {
+    return (
+      <main className="min-h-screen bg-[#fffff] flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-black/20 border-t-black rounded-full animate-spin"></div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[#2A0040] flex flex-col">
