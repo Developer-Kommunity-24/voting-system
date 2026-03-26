@@ -7,10 +7,10 @@ import { useState, useEffect } from "react";
 import { useAuth, useUser } from "@clerk/react";
 import LoginScreen from "./components/LoginScreen";
 import AuthScreen from "./components/AuthScreen";
-import RatingScreen from "./components/RatingScreen";
 import ProgressScreen from "./components/ProgressScreen";
 import ScannerScreen from "./components/ScannerScreen";
 import CompletionScreen from "./components/CompletionScreen";
+import RatingScreen from "./components/RatingScreen";
 
 type Screen = 'login' | 'auth' | 'rating' | 'progress' | 'scanner' | 'completion';
 
@@ -122,50 +122,52 @@ export default function App() {
   };
 
   return (
-    <main className="min-h-screen bg-[#2A0040]">
-      {currentScreen === 'login' && (
-        <LoginScreen onStart={() => setCurrentScreen('auth')} />
-      )}
+    <main className="min-h-screen bg-[#2A0040] flex flex-col">
+      <div className="flex-grow flex flex-col relative">
+        {currentScreen === 'login' && (
+          <LoginScreen onStart={() => setCurrentScreen('auth')} />
+        )}
 
-      {currentScreen === 'auth' && (
-        <AuthScreen />
-      )}
+        {currentScreen === 'auth' && (
+          <AuthScreen />
+        )}
 
-      {currentScreen === 'scanner' && (
-        <ScannerScreen
-          onScanSuccess={handleScanSuccess}
-          onClose={() => setCurrentScreen('progress')}
-        />
-      )}
+        {currentScreen === 'scanner' && (
+          <ScannerScreen
+            onScanSuccess={handleScanSuccess}
+            onClose={() => setCurrentScreen('progress')}
+          />
+        )}
 
-      {currentScreen === 'rating' && currentStallId && (
-        <RatingScreen
-          stallId={currentStallId}
-          onBack={() => setCurrentScreen('scanner')}
-          onProgress={() => setCurrentScreen('progress')}
-          onSubmitSuccess={handleRatingSubmit}
-          ratedCount={Object.keys(ratings).length}
-          totalCount={totalStalls}
-        />
-      )}
+        {currentScreen === 'rating' && currentStallId && (
+          <RatingScreen
+            stallId={currentStallId}
+            onBack={() => setCurrentScreen('scanner')}
+            onProgress={() => setCurrentScreen('progress')}
+            onSubmitSuccess={handleRatingSubmit}
+            ratedCount={Object.keys(ratings).length}
+            totalCount={totalStalls}
+          />
+        )}
 
-      {currentScreen === 'progress' && (
-        <ProgressScreen
-          unlockedStalls={unlockedStalls}
-          ratings={ratings}
-          onScanNext={() => setCurrentScreen('scanner')}
-          totalCount={totalStalls}
-          onBackToVote={() => setCurrentScreen('scanner')}
-        />
-      )}
+        {currentScreen === 'progress' && (
+          <ProgressScreen
+            unlockedStalls={unlockedStalls}
+            ratings={ratings}
+            onScanNext={() => setCurrentScreen('scanner')}
+            totalCount={totalStalls}
+            onBackToVote={() => setCurrentScreen('scanner')}
+          />
+        )}
 
-      {currentScreen === 'completion' && (
-        <CompletionScreen
-          onClose={() => setCurrentScreen('progress')}
-          onGoToProfile={() => setCurrentScreen('progress')}
-          onViewLeaderboard={() => setCurrentScreen('progress')}
-        />
-      )}
+        {currentScreen === 'completion' && (
+          <CompletionScreen
+            onClose={() => setCurrentScreen('progress')}
+            onGoToProfile={() => setCurrentScreen('progress')}
+            onViewLeaderboard={() => setCurrentScreen('progress')}
+          />
+        )}
+      </div>
     </main>
   );
 }

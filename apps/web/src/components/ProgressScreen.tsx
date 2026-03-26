@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { QrCode, CheckCircle2, Lock, Vote, BarChart3, User, ChevronLeft } from 'lucide-react';
 import { UserButton } from "@clerk/react";
+import Footer from "./Footer";
 
 interface ProgressScreenProps {
   onBackToVote?: () => void;
@@ -164,6 +165,11 @@ export default function ProgressScreen({
               );
             })}
           </div>
+        </div>
+        
+        {/* Footer */}
+        <div className="-mx-6 mt-12 -mb-24">
+          <Footer className="pb-[7rem]" />
         </div>
       </main>
 

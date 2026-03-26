@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { X, CheckCircle2, Star } from 'lucide-react';
 import { UserButton } from "@clerk/react";
+import Footer from "./Footer";
 
 interface CompletionScreenProps {
   onClose: () => void;
@@ -74,6 +75,10 @@ export default function CompletionScreen({ onClose }: CompletionScreenProps) {
             Your votes are now officially counted. <br />
             Thank you for participating!
           </p>
+        </div>
+        
+        <div className="w-full mt-auto mt-8 -mx-8 -mb-12">
+          <Footer className="pb-16" />
         </div>
       </main>
     </div>

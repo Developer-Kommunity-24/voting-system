@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { User, ChevronLeft, Send, BarChart3, Vote } from 'lucide-react';
 import { UserButton } from "@clerk/react";
+import Footer from "./Footer";
 
 interface RatingScreenProps {
   stallId: string;
@@ -157,6 +158,11 @@ export default function RatingScreen({ stallId, onBack, onProgress, onSubmitSucc
               </motion.div>
             )}
           </motion.button>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-12 -mx-6 -mb-24">
+          <Footer className="pb-[7rem]" />
         </div>
       </main>
 
