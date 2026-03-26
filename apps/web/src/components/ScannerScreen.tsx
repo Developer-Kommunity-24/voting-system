@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { QrCode, X, Zap, ChevronLeft } from 'lucide-react';
 import { Html5Qrcode } from 'html5-qrcode';
+import Footer from "./Footer";
 
 interface ScannerScreenProps {
   onScanSuccess: (decodedText: string) => void;
@@ -82,9 +83,11 @@ export default function ScannerScreen({ onScanSuccess, onClose }: ScannerScreenP
   };
 
   return (
-    <div className="h-[100dvh] bg-black relative flex flex-col overflow-hidden text-white">
-      {/* Header */}
-      <header className="absolute top-0 left-0 right-0 p-6 flex items-center justify-between z-50">
+    <div className="min-h-[100dvh] bg-black relative flex flex-col overflow-y-auto text-white">
+      {/* Screen-Height Scanner Area */}
+      <div className="h-[100dvh] relative flex flex-col shrink-0">
+        {/* Header */}
+        <header className="absolute top-0 left-0 right-0 p-6 flex items-center justify-between z-50">
         <button 
           onClick={handleClose}
           className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20"
@@ -131,6 +134,12 @@ export default function ScannerScreen({ onScanSuccess, onClose }: ScannerScreenP
           <h2 className="text-xl font-bold mb-2 drop-shadow-lg">Scan Stall QR Code</h2>
           <p className="text-white/80 text-sm drop-shadow-md">Align the QR code within the frame to start rating the stall.</p>
         </div>
+        </div>
+      </div>
+
+      {/* Footer Below Fold */}
+      <div className="mt-auto">
+        <Footer className="pb-[7rem]" />
       </div>
 
       {/* Success Overlay */}

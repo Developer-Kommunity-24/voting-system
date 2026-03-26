@@ -70,35 +70,38 @@ export default function LoginScreen({ onStart }: LoginScreenProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="flex flex-col items-center w-full"
+            className="flex flex-row items-stretch justify-center gap-4 sm:gap-8 w-full"
           >
-            <div className="flex flex-col items-center gap-2 mb-4 sm:mb-6 md:mb-8">
-              <span className="text-[10px] sm:text-xs uppercase tracking-[0.4em] font-bold opacity-60 text-center font-display">Powered by</span>
-              <div className="flex items-center justify-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 shrink-0 overflow-hidden p-1">
+            {/* Powered By Block */}
+            <div className="flex flex-col items-center justify-between">
+              <span className="text-[8px] sm:text-[10px] uppercase tracking-[0.2em] font-bold opacity-60 text-center font-display mb-2">Powered By</span>
+              <a href="https://dk24.org/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-1.5 hover:opacity-80 transition-opacity mt-auto">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 overflow-hidden">
                   <img src="/dk24.png" alt="DK24" className="w-full h-full object-contain" />
                 </div>
-                <span className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold font-display tracking-widest whitespace-nowrap">DK24</span>
-              </div>
+                <span className="text-xs sm:text-sm font-bold font-display tracking-widest whitespace-nowrap">DK24</span>
+              </a>
             </div>
 
-            {/* Additional Logos Section */}
-            <div className="flex items-center justify-center gap-4 sm:gap-6 md:gap-12 pt-4 border-t border-white/10 w-full">
-              {[
-                { id: 1, src: '/cosc.png', alt: 'COSC' },
-                { id: 2, src: null, alt: 'LOGO 2' },
-                { id: 3, src: null, alt: 'LOGO 3' }
-              ].map((logo) => (
-                <div key={logo.id} className="flex flex-col items-center gap-2">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16  flex items-center justify-center backdrop-blur-sm hover:bg-white/20 transition-all cursor-pointer group overflow-hidden">
-                    {logo.src ? (
-                      <img src={logo.src} alt={logo.alt} className="w-full h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity p-1.5 sm:p-2" />
-                    ) : (
-                      <span className="text-[8px] sm:text-[10px] opacity-50 font-bold font-display group-hover:opacity-100 transition-opacity">{logo.alt}</span>
-                    )}
-                  </div>
-                </div>
-              ))}
+            {/* Divider */}
+            <div className="w-px bg-white/20 hidden sm:block"></div>
+
+            {/* In Collaboration Block */}
+            <div className="flex flex-col items-center justify-between">
+              <span className="text-[8px] sm:text-[10px] uppercase tracking-[0.2em] font-bold opacity-60 text-center font-display mb-2">In Collaboration</span>
+              <div className="flex items-center justify-center gap-2 sm:gap-3 mt-auto">
+                {[
+                  { id: 1, src: '/cosc.png', alt: 'COSC', url: 'https://www.linkedin.com/company/canara-students-open-source-community/' },
+                  { id: 2, src: '/sosc.png', alt: 'SOSC', url: 'https://sosc.org.in/' },
+                  { id: 3, src: '/sceptix.png', alt: 'Sceptix', url: 'https://www.sceptix.in/' }
+                ].map((logo) => (
+                  <a key={logo.id} href={logo.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center">
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center backdrop-blur-sm hover:bg-white/20 transition-all group overflow-hidden rounded-md">
+                      <img src={logo.src} alt={logo.alt} className="w-full h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity p-0.5 sm:p-1" />
+                    </div>
+                  </a>
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>

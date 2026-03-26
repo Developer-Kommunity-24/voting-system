@@ -23,26 +23,18 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('login');
   const [synced, setSynced] = useState(false);
   const [serverProgress, setServerProgress] = useState(0);
-  const [unlockedStalls, setUnlockedStalls] = useState<string[]>(() => {
-    const saved = localStorage.getItem('unlockedStalls');
-    return saved ? JSON.parse(saved) : [];
-  });
   const [ratings, setRatings] = useState<Record<string, number>>(() => {
     const saved = localStorage.getItem('ratings');
     return saved ? JSON.parse(saved) : {};
   });
+  
+  const [ratedStalls, setRatedStalls] = useState<Array<{stallId: number, stallName: string, rating: number}>>(() => {
+    const saved = localStorage.getItem('ratedStalls');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [currentStallData, setCurrentStallData] = useState<{ id: number, name: string, description: string, logo: string } | null>(null);
 
   const totalStalls = 13;
-
-  const unlockStall = (id: string) => {
-    setUnlockedStalls(prev => {
-      if (prev.includes(id)) return prev;
-      const next = [...prev, id];
-      localStorage.setItem('unlockedStalls', JSON.stringify(next));
-      return next;
-    });
-  };
 
   // Sync user to DB after Clerk sign-in and fetch true progress
   useEffect(() => {
@@ -66,16 +58,23 @@ export default function App() {
           
           if (progJson.ratings && Array.isArray(progJson.ratings)) {
             const fetchedRatings: Record<string, number> = {};
+            const fetchedStalls: Array<{stallId: number, stallName: string, rating: number}> = [];
+            
             progJson.ratings.forEach((r: any) => {
               fetchedRatings[r.stallId] = r.rating;
+              fetchedStalls.push({ stallId: r.stallId, stallName: r.stallName, rating: r.rating });
             });
             
             setRatings(fetchedRatings);
+            setRatedStalls(fetchedStalls);
             localStorage.setItem('ratings', JSON.stringify(fetchedRatings));
+            localStorage.setItem('ratedStalls', JSON.stringify(fetchedStalls));
           } else {
              // If DB has 0 ratings, wipe the local cache to be completely accurate!
              setRatings({});
+             setRatedStalls([]);
              localStorage.setItem('ratings', JSON.stringify({}));
+             localStorage.setItem('ratedStalls', JSON.stringify([]));
           }
         }
       } catch (e) {
@@ -135,6 +134,15 @@ export default function App() {
         setRatings(newRatings);
         localStorage.setItem('ratings', JSON.stringify(newRatings));
         
+        setRatedStalls(prev => {
+          const exists = prev.find(s => s.stallId === currentStallData.id);
+          const updated = exists 
+            ? prev.map(s => s.stallId === currentStallData.id ? { ...s, rating } : s)
+            : [...prev, { stallId: currentStallData.id, stallName: currentStallData.name, rating }];
+          localStorage.setItem('ratedStalls', JSON.stringify(updated));
+          return updated;
+        });
+        
         setServerProgress(prev => {
           const next = prev + 1;
           if (next >= totalStalls) {
@@ -191,7 +199,6 @@ export default function App() {
       
       if (json.success && json.data) {
         setCurrentStallData(json.data);
-        unlockStall(json.data.id.toString());
         
         if (ratings[json.data.id] !== undefined) {
           alert("You have already rated this stall!");
@@ -211,51 +218,53 @@ export default function App() {
   };
 
   return (
-    <main className="min-h-screen bg-[#2A0040]">
-      {currentScreen === 'login' && (
-        <LoginScreen onStart={() => setCurrentScreen('auth')} />
-      )}
+    <main className="min-h-screen bg-[#2A0040] flex flex-col">
+      <div className="flex-grow flex flex-col relative">
+        {currentScreen === 'login' && (
+          <LoginScreen onStart={() => setCurrentScreen('auth')} />
+        )}
 
-      {currentScreen === 'auth' && (
-        <AuthScreen />
-      )}
+        {currentScreen === 'auth' && (
+          <AuthScreen />
+        )}
 
-      {currentScreen === 'scanner' && (
-        <ScannerScreen
-          onScanSuccess={handleScanSuccess}
-          onClose={() => setCurrentScreen('progress')}
-        />
-      )}
+        {currentScreen === 'scanner' && (
+          <ScannerScreen
+            onScanSuccess={handleScanSuccess}
+            onClose={() => setCurrentScreen('progress')}
+          />
+        )}
 
-      {currentScreen === 'rating' && currentStallData && (
-        <RatingScreen
-          stallData={currentStallData}
-          onBack={() => setCurrentScreen('scanner')}
-          onProgress={() => setCurrentScreen('progress')}
-          onSubmitSuccess={handleRatingSubmit}
-          ratedCount={serverProgress}
-          totalCount={totalStalls}
-        />
-      )}
+        {currentScreen === 'rating' && currentStallData && (
+          <RatingScreen
+            stallData={currentStallData}
+            onBack={() => setCurrentScreen('scanner')}
+            onProgress={() => setCurrentScreen('progress')}
+            onSubmitSuccess={handleRatingSubmit}
+            ratedCount={serverProgress}
+            totalCount={totalStalls}
+          />
+        )}
 
-      {currentScreen === 'progress' && (
-        <ProgressScreen
-          unlockedStalls={unlockedStalls}
-          ratings={ratings}
-          onScanNext={() => setCurrentScreen('scanner')}
-          totalCount={totalStalls}
-          serverProgress={serverProgress}
-          onBackToVote={() => setCurrentScreen('scanner')}
-        />
-      )}
+        {currentScreen === 'progress' && (
+          <ProgressScreen
+            ratings={ratings}
+            ratedStalls={ratedStalls}
+            onScanNext={() => setCurrentScreen('scanner')}
+            totalCount={totalStalls}
+            serverProgress={serverProgress}
+            onBackToVote={() => setCurrentScreen('scanner')}
+          />
+        )}
 
-      {currentScreen === 'completion' && (
-        <CompletionScreen
-          onClose={() => setCurrentScreen('progress')}
-          onGoToProfile={() => setCurrentScreen('progress')}
-          onViewLeaderboard={() => setCurrentScreen('progress')}
-        />
-      )}
+        {currentScreen === 'completion' && (
+          <CompletionScreen
+            onClose={() => setCurrentScreen('progress')}
+            onGoToProfile={() => setCurrentScreen('progress')}
+            onViewLeaderboard={() => setCurrentScreen('progress')}
+          />
+        )}
+      </div>
     </main>
   );
 }

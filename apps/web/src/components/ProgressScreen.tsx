@@ -1,13 +1,14 @@
 import { motion } from 'motion/react';
 import { QrCode, CheckCircle2, Lock, Vote, BarChart3, User, ChevronLeft } from 'lucide-react';
 import { UserButton } from "@clerk/react";
+import Footer from "./Footer";
 
 interface ProgressScreenProps {
   onBackToVote?: () => void;
   onProfile?: () => void;
   onScanNext?: () => void;
-  unlockedStalls?: string[];
   ratings?: Record<string, number>;
+  ratedStalls?: Array<{ stallId: number, stallName: string, rating: number }>;
   totalCount?: number;
   serverProgress?: number;
 }
@@ -16,8 +17,8 @@ export default function ProgressScreen({
   onBackToVote,
   onProfile,
   onScanNext,
-  unlockedStalls = [],
   ratings = {},
+  ratedStalls = [],
   totalCount = 13,
   serverProgress = 0
 }: ProgressScreenProps) {
@@ -125,56 +126,49 @@ export default function ProgressScreen({
 
           <div className="space-y-3">
             {Array.from({ length: totalCount }).map((_, i) => {
-              const stallNumber = i + 1;
-              const stallId = stallNumber.toString();
-              const isUnlocked = unlockedStalls.includes(stallId);
-              const isRated = ratings[stallId] !== undefined;
-
-              const status = isRated ? 'rated' : (isUnlocked ? 'pending' : 'locked');
-              const displayId = String(stallNumber).padStart(2, '0');
+              // We map purely by index for the visual directory slots. 
+              // We grab the actual rated stall from the array dynamically to bypass hardcoded DB IDs.
+              const ratedStall = ratedStalls[i]; 
+              
+              const status = ratedStall ? 'rated' : 'locked';
+              
+              const displayId = String(i + 1).padStart(2, '0');
+              const stallName = ratedStall ? ratedStall.stallName : 'Locked Stall';
 
               return (
                 <motion.div
-                  key={stallId}
+                  key={`slot-${displayId}`}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
                   className={`
                     p-4 rounded-2xl flex items-center justify-between border transition-all
-                    ${status === 'locked' ? 'bg-slate-50 border-transparent opacity-60' :
-                      status === 'pending' ? 'bg-white border-[#FF2D55] shadow-md' : 'bg-white border-slate-100 shadow-sm'}
+                    ${status === 'locked' ? 'bg-slate-50 border-transparent opacity-60' : 'bg-white border-slate-100 shadow-sm'}
                   `}
                 >
                   <div className="flex items-center gap-4">
                     <div className={`
-                      w-12 h-12 rounded-xl flex items-center justify-center font-bold text-sm
-                      ${status === 'rated' ? 'bg-emerald-50 text-emerald-500' :
-                        status === 'pending' ? 'bg-[#FF2D55] text-white' : 'bg-slate-200 text-slate-400'}
+                      w-12 h-12 rounded-xl flex items-center justify-center font-bold text-sm shrink-0
+                      ${status === 'rated' ? 'bg-emerald-50 text-emerald-500' : 'bg-slate-200 text-slate-400'}
                     `}>
                       {displayId}
                     </div>
                     <div>
-                      <h4 className={`font-bold ${status === 'locked' ? 'text-slate-400' : 'text-slate-800'}`}>
-                        {status === 'locked' ? 'Locked Stall' : `Eco-Tech Stall #${displayId}`}
+                      <h4 className={`font-bold leading-tight ${status === 'locked' ? 'text-slate-400' : 'text-slate-800'}`}>
+                        {stallName}
                       </h4>
                       <span className="text-xs text-slate-400">
-                        {isRated ? 'Rating submitted' : status === 'pending' ? 'Ready to rate' : 'Scan QR to unlock'}
+                        {status === 'rated' ? 'Rating submitted' : 'Scan QR to unlock'}
                       </span>
                     </div>
                   </div>
 
                   <div>
-                    {status === 'rated' && (
+                    {status === 'rated' ? (
                       <div className="w-8 h-8 flex items-center justify-center bg-emerald-50 text-emerald-500 rounded-full">
                         <CheckCircle2 className="w-5 h-5" />
                       </div>
-                    )}
-                    {status === 'pending' && (
-                      <div className="w-8 h-8 flex items-center justify-center bg-rose-50 text-rose-500 rounded-full">
-                        <Vote className="w-5 h-5" />
-                      </div>
-                    )}
-                    {status === 'locked' && (
+                    ) : (
                       <div className="w-8 h-8 flex items-center justify-center text-slate-300">
                         <Lock className="w-5 h-5" />
                       </div>
@@ -184,6 +178,11 @@ export default function ProgressScreen({
               );
             })}
           </div>
+        </div>
+        
+        {/* Footer */}
+        <div className="-mx-6 mt-12 -mb-24">
+          <Footer className="pb-[7rem]" />
         </div>
       </main>
 
