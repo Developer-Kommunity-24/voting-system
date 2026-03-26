@@ -115,16 +115,16 @@ export default function App() {
             if (json.success && json.data) {
               setCurrentStallData(json.data);
               
-              // if (ratings[json.data.id] !== undefined) {
-              //   setFeedbackModal({
-              //     title: "Already Rated",
-              //     message: "You have already submitted a rating for this stall. Please scan a different stall's QR code to continue voting!",
-              //     type: 'error'
-              //   });
-              //   setCurrentScreen('progress');
-              // } else {
+              if (ratings[json.data.id] !== undefined) {
+                setFeedbackModal({
+                  title: "Already Rated",
+                  message: "You have already submitted a rating for this stall. Please scan a different stall's QR code to continue voting!",
+                  type: 'error'
+                });
+                setCurrentScreen('progress');
+              } else {
               setCurrentScreen('rating');
-              // }
+              }
             } else {
               setFeedbackModal({
                 title: "Invalid Stall Link",
@@ -254,16 +254,16 @@ export default function App() {
       if (json.success && json.data) {
         setCurrentStallData(json.data);
         
-        // if (ratings[json.data.id] !== undefined) {
-        //   setFeedbackModal({
-        //     title: "Already Rated",
-        //     message: "You have already submitted a rating for this stall. Please scan a different stall's QR code to continue voting!",
-        //     type: 'error'
-        //   });
-        //   setCurrentScreen('progress');
-        // } else {
+        if (ratings[json.data.id] !== undefined) {
+          setFeedbackModal({
+            title: "Already Rated",
+            message: "You have already submitted a rating for this stall. Please scan a different stall's QR code to continue voting!",
+            type: 'error'
+          });
+          setCurrentScreen('progress');
+        } else {
         setCurrentScreen('rating');
-        // }
+        }
       } else {
         setFeedbackModal({
           title: "Invalid Stall",
