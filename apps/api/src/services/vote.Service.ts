@@ -16,16 +16,17 @@ function isVotingOpen(): boolean {
   if (year !== 2026 || month !== 3) return false;
 
   const timeInMinutes = istTime.getUTCHours() * 60 + istTime.getUTCMinutes();
-  const startMins = 9 * 60 + 30; // 9:30 AM (570)
 
   if (day === 28) {
+    const startMinsDay1 = 8 * 60 + 30; // 8:30 AM (510)
     const endMins = 22 * 60; // 10:00 PM (1320)
-    return timeInMinutes >= startMins && timeInMinutes <= endMins;
+    return timeInMinutes >= startMinsDay1 && timeInMinutes <= endMins;
   }
 
   if (day === 29) {
+    const startMinsDay2 = 9 * 60 + 30; // 9:30 AM (570)
     const endMins = 12 * 60; // 12:00 PM (720)
-    return timeInMinutes >= startMins && timeInMinutes <= endMins;
+    return timeInMinutes >= startMinsDay2 && timeInMinutes <= endMins;
   }
 
   return false;
