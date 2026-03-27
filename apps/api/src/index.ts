@@ -15,6 +15,22 @@ const app = new Hono<AppEnv>()
 
 const port = 8000;
 
+
+//clerk proxy
+app.all('/__clerk/*', async (c) => {
+  const url = new URL(c.req.url);
+  const clerkDomain = (c.env as any).CLERK_PROXY_TARGET ?? 'https://clerk.vote.dk24.org';
+  const clerkUrl = `${clerkDomain}${url.pathname.replace('/__clerk', '')}${url.search}`;
+
+  const response = await fetch(clerkUrl, {
+    method: c.req.method,
+    headers: c.req.raw.headers,
+    body: c.req.raw.body,
+  });
+
+  return response;
+});
+
 //using cors and clerk middleware
 app.use('*', cors())
 
