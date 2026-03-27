@@ -21,17 +21,19 @@ interface ProgressScreenProps {
   ratedStalls?: Array<{ stallId: number, stallName: string, rating: number }>;
   totalCount?: number;
   serverProgress?: number;
+  allStalls?: Array<{ id: number, name: string }>;
 }
 
 export default function ProgressScreen({
   onScanNext,
   ratings = {},
   totalCount = 11,
-  serverProgress = 0
+  serverProgress = 0,
+  allStalls = []
 }: ProgressScreenProps) {
-  // Always use the server's synced progress as the ultimate source of truth, fallback to local if 0
+  // Always use the server's synced progress as the ultimate source of truth
   const localRatedCount = Object.keys(ratings).length;
-  const ratedCount = Math.max(serverProgress, localRatedCount);
+  const ratedCount = serverProgress > 0 ? serverProgress : localRatedCount;
 
   return (
     <div className="fixed inset-0 overflow-y-auto overflow-x-hidden bg-[#070014]">
@@ -67,6 +69,13 @@ export default function ProgressScreen({
             </div>
             {/* Directory Section */}
             <div className="pb-8">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-3 flex items-center gap-3 relative z-10 mb-6">
+                <span className="text-lg leading-none drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">🏆</span>
+                <p className="text-white/90 text-xs font-medium leading-none">
+                  You are voting for the People's Choice Award.
+                </p>
+              </div>
+
               <div className="mb-6 flex items-center justify-between">
                 <h3 className="text-xl font-bold font-display text-white/90">Stall Directory</h3>
                 <div className="flex items-center gap-2">
@@ -75,36 +84,37 @@ export default function ProgressScreen({
                 </div>
               </div>
 
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-6 gap-2">
                 {Array.from({ length: totalCount }).map((_, index) => {
-                  const status = ratings[String(index + 1)] !== undefined ? 'rated' : 'locked';
+                  const stallId = index + 1;
+                  const status = index < ratedCount ? 'rated' : 'locked';
 
                   return (
                     <motion.div
-                      key={`slot-${index}`}
+                      key={`slot-${stallId}`}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: index * 0.03 }}
+                      transition={{ delay: index * 0.02 }}
                       className={cn(
-                        "aspect-square rounded-2xl flex flex-col items-center justify-center border transition-all relative overflow-hidden",
+                        "aspect-square rounded-xl flex flex-col items-center justify-center border transition-all relative overflow-hidden",
                         status === 'locked'
                           ? 'bg-white/5 border-white/5 opacity-40'
                           : 'bg-white/10 border-white/20 shadow-lg'
                       )}
                     >
                       {status === 'rated' ? (
-                        <CheckCircle2 className="w-6 h-6 text-[#00E5FF] drop-shadow-[0_0_8px_rgba(0,229,255,0.4)]" />
+                        <CheckCircle2 className="w-5 h-5 text-[#00E5FF] drop-shadow-[0_0_8px_rgba(0,229,255,0.4)]" />
                       ) : (
-                        <Lock className="w-5 h-5 text-white/20" />
+                        <Lock className="w-4 h-4 text-white/20" />
                       )}
 
                       {status === 'rated' && (
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="absolute top-0 right-0 w-4 h-4 bg-[#00E5FF] rounded-bl-lg flex items-center justify-center"
+                          className="absolute top-0 right-0 w-3 h-3 bg-[#00E5FF] rounded-bl-md flex items-center justify-center"
                         >
-                          <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                          <div className="w-1 h-1 bg-black rounded-full" />
                         </motion.div>
                       )}
                     </motion.div>
@@ -117,25 +127,12 @@ export default function ProgressScreen({
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white/[0.04] backdrop-blur-xl border border-white/20 rounded-[32px] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.5)] mb-6 relative overflow-hidden"
+              className="flex items-center justify-center gap-3 mb-6"
             >
-              {/* Inner subtle glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] to-transparent pointer-events-none" />
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-3 relative z-10">
-                <div className="flex items-start gap-4">
-                  <span className="text-xl leading-none pt-0.5 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">🏆</span>
-                  <p className="text-white/90 text-sm font-medium leading-snug">
-                    You are voting for the People's Choice Award.
-                  </p>
-                </div>
-
-                <div className="flex items-start gap-3 bg-white/5 border border-white/10 rounded-xl p-3">
-                  <span className="text-amber-400 text-sm leading-none pt-1 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">⚠️</span>
-                  <p className="text-white/70 text-xs font-medium leading-relaxed">
-                    Your votes will be counted only if you rate <span className="text-white font-bold">all 11 stalls</span>.
-                  </p>
-                </div>
-              </div>
+              <span className="text-amber-400 text-sm leading-none drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">⚠️</span>
+              <p className="text-white/70 text-[11px] font-medium leading-none m-0">
+                Your votes will be counted only if you rate <span className="text-white font-bold">all 11 stalls</span>.
+              </p>
             </motion.div>
 
             {/* Scan Button / Completion Action */}
@@ -171,11 +168,11 @@ export default function ProgressScreen({
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-3 hover:opacity-80 transition-opacity"
                 >
-                   <img
-                      src="/Consortium Logo.svg"
-                      alt="DK24"
-                      className="h-15 sm:h-15 w-auto object-contain"
-                    />
+                  <img
+                    src="/Consortium Logo.svg"
+                    alt="DK24"
+                    className="h-15 sm:h-15 w-auto object-contain"
+                  />
                 </a>
               </div>
 
