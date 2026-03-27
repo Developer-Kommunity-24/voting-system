@@ -10,7 +10,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ClerkProvider
       publishableKey={PUBLISHABLE_KEY}
-      proxyUrl={import.meta.env.VITE_CLERK_PROXY_URL}
+      // proxyUrl={import.meta.env.VITE_CLERK_PROXY_URL}
       signInFallbackRedirectUrl="/"
       signUpFallbackRedirectUrl="/"
     >
