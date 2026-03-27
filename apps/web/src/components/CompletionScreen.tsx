@@ -3,14 +3,10 @@ import { CheckCircle2, Star } from 'lucide-react';
 
 interface CompletionScreenProps {
   onClose: () => void;
-  onGoToProfile: () => void;
-  onViewLeaderboard: () => void;
 }
 
 export default function CompletionScreen({ 
-  onClose, 
-  onGoToProfile, 
-  onViewLeaderboard 
+  onClose
 }: CompletionScreenProps) {
   return (
     <div
@@ -91,21 +87,6 @@ export default function CompletionScreen({
             </p>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md shrink-0">
-            <button
-              onClick={onGoToProfile}
-              className="px-6 py-3 bg-gradient-to-r from-[#8B5CF6] to-[#6D28D9] rounded-xl font-bold text-white hover:opacity-90 transition-opacity flex-1"
-            >
-              Go to Profile
-            </button>
-            <button
-              onClick={onViewLeaderboard}
-              className="px-6 py-3 bg-white/10 backdrop-blur-sm rounded-xl font-bold text-white hover:bg-white/20 transition-colors flex-1 border border-white/20"
-            >
-              View Leaderboard
-            </button>
-          </div>
 
           {/* Close button */}
           <button

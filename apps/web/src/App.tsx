@@ -363,8 +363,6 @@ export default function App() {
         {currentScreen === 'completion' && (
           <CompletionScreen
             onClose={() => setCurrentScreen('progress')}
-            onGoToProfile={() => setCurrentScreen('progress')}
-            onViewLeaderboard={() => setCurrentScreen('progress')}
           />
         )}
       </div>
