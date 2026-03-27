@@ -9,7 +9,7 @@ export default function LoginScreen({ onStart }: LoginScreenProps) {
   return (
     <div
       className="h-[100dvh] relative select-none overflow-hidden flex flex-col bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('/bg.png')" }}
+      style={{ backgroundImage: "url('/bg.webp')" }}
     >
       <div className="relative z-10 h-full flex flex-col items-center justify-between pt-10 pb-6 px-6 overflow-y-auto">
 

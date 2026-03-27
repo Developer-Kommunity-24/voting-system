@@ -29,7 +29,7 @@ export default function Footer({
           >
             <div className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 overflow-hidden">
               <img
-                src="/dk24.png"
+                src="/dk24.webp"
                 alt="DK24"
                 className="w-full h-full object-contain"
               />
@@ -50,19 +50,19 @@ export default function Footer({
             {[
               {
                 id: 1,
-                src: "/cosc.png",
+                src: "/cosc.webp",
                 alt: "COSC",
                 url: "https://www.linkedin.com/company/canara-students-open-source-community/",
               },
               {
                 id: 2,
-                src: "/sosc.png",
+                src: "/sosc.webp",
                 alt: "SOSC",
                 url: "https://sosc.org.in/",
               },
               {
                 id: 3,
-                src: "/sceptix.png",
+                src: "/sceptix.webp",
                 alt: "Sceptix",
                 url: "https://www.sceptix.in/",
               },
