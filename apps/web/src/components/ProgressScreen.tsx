@@ -29,7 +29,7 @@ export default function ProgressScreen({
   ratings = {},
   totalCount = 11,
   serverProgress = 0,
-  allStalls: _allStalls = []
+  //allStalls: _allStalls = []
 }: ProgressScreenProps) {
   // Always use the server's synced progress as the ultimate source of truth
   const localRatedCount = Object.keys(ratings).length;
