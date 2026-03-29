@@ -6,34 +6,33 @@ import type { AppEnv } from '../types'
 import { ensureUserExists } from './user.Service'
 import { refreshStallAggregates } from './stalls.Service'
 function isVotingOpen(): boolean {
-  return true; // For now, always return true. Implement actual logic based on time if needed.
-  // const istOffset = 5.5 * 60 * 60 * 1000;
-  // const istTime = new Date(Date.now() + istOffset);
+  const istOffset = 5.5 * 60 * 60 * 1000;
+  const istTime = new Date(Date.now() + istOffset);
 
-  // const year = istTime.getUTCFullYear();
-  // const month = istTime.getUTCMonth() + 1;
+  const year = istTime.getUTCFullYear();
+  const month = istTime.getUTCMonth() + 1;
   
-//   const day = istTime.getUTCDate();
+  const day = istTime.getUTCDate();
 
-//   if (year !== 2026 || month !== 3) return false;
+  if (year !== 2026 || month !== 3) return false;
 
-//   const timeInMinutes = istTime.getUTCHours() * 60 + istTime.getUTCMinutes();
+  const timeInMinutes = istTime.getUTCHours() * 60 + istTime.getUTCMinutes();
 
-//   if (day === 28) {
-//     const startMinsDay1 = 8 * 60 + 30; // 8:30 AM (510)
-//     const endMins = 22 * 60; // 10:00 PM (1320)
-//     return timeInMinutes >= startMinsDay1 && timeInMinutes <= endMins;
-//   }
+  if (day === 28) {
+    const startMinsDay1 = 8 * 60 + 30; // 8:30 AM (510)
+    const endMins = 22 * 60; // 10:00 PM (1320)
+    return timeInMinutes >= startMinsDay1 && timeInMinutes <= endMins;
+  }
 
-//   if (day === 29) {
-//     const startMinsDay2 = 9 * 60 + 30; // 9:30 AM (570)
-//     const endMins = 4 * 60 +30; // 4:30 PM (270)
-//     return timeInMinutes >= startMinsDay2 && timeInMinutes <= endMins;
-//   }
+  if (day === 29) {
+    const startMinsDay2 = 9 * 60 + 30; // 9:30 AM (570)
+    const endMins = 4 * 60 +30; // 4:30 PM (270)
+    return timeInMinutes >= startMinsDay2 && timeInMinutes <= endMins;
+  }
 
-//   return false;
-// }
+  return false;
 }
+
 export const submitVote = async (
   env: AppEnv['Bindings'],
   userId: string,
