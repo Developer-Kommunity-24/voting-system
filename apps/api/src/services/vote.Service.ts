@@ -26,7 +26,7 @@ function isVotingOpen(): boolean {
 
   if (day === 29) {
     const startMinsDay2 = 9 * 60 + 30; // 9:30 AM (570)
-    const endMins = 12 * 60; // 12:00 PM (720)
+    const endMins = 4 * 60 +30; // 4:30 PM (270)
     return timeInMinutes >= startMinsDay2 && timeInMinutes <= endMins;
   }
 
