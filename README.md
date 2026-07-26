@@ -22,7 +22,6 @@ voting-system/
 │   ├── api/             # Hono backend running on Cloudflare Workers
 │   ├── web/             # React + Vite frontend running on Cloudflare Pages
 │   ├── clerk-proxy/     # Clerk authentication proxy configuration
-│   └── tigger-email/    # Email notification service
 └── DEPLOYMENT.md        # Complete self-deployment & infrastructure guide
 ```
 
