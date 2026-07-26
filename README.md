@@ -57,7 +57,7 @@ voting-system/
 
 Planning to deploy your own instance of the Voting System? 
 
-Check out our comprehensive **[Self-Deployment & Infrastructure Guide](file:///C:/Users/kaush/OneDrive/Documents/GitHub/voting-system/DEPLOYMENT.md)** for detailed instructions on:
+Check out our comprehensive **[Self-Deployment & Infrastructure Guide](./DEPLOYMENT.md)** for detailed instructions on:
 - Cloudflare Pages & Workers deployment
 - Custom Domain & DNS configuration
 - Cloudflare D1 Database migrations
