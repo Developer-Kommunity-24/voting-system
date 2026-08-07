@@ -1,31 +1,40 @@
 -- 1. Create Users Table
 CREATE TABLE users (
   id TEXT PRIMARY KEY,
+  email TEXT UNIQUE,
   name TEXT,
-  email TEXT,
-  is_completed INTEGER DEFAULT 0,
+  completed INTEGER DEFAULT 0,
   created_at INTEGER DEFAULT (strftime('%s', 'now'))
 );
 
--- 2. Create Stalls Table
-CREATE TABLE stalls (
-  id INTEGER PRIMARY KEY,
-  name TEXT,
-  qr_slug TEXT UNIQUE,
+-- 2. Create Items Table
+CREATE TABLE items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  description TEXT,
+  logo TEXT,
+  qr_slug TEXT UNIQUE NOT NULL,
+  total_voters INTEGER DEFAULT 0,
+  qualified_voters INTEGER DEFAULT 0,
+  qualified_rating_sum INTEGER DEFAULT 0,
+  non_qualified_rating_sum INTEGER DEFAULT 0,
+  qualified_avg_rating REAL DEFAULT 0,
   created_at INTEGER DEFAULT (strftime('%s', 'now'))
 );
 
 -- 3. Create Ratings Table
 CREATE TABLE ratings (
-  id INTEGER PRIMARY KEY,
-  user_id TEXT,
-  stall_id INTEGER,
-  rating INTEGER,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  item_id INTEGER NOT NULL,
+  rating INTEGER NOT NULL,
   created_at INTEGER DEFAULT (strftime('%s', 'now')),
-  UNIQUE(user_id, stall_id),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (stall_id) REFERENCES stalls(id) ON DELETE CASCADE
+  FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
 );
 
--- 4.Adding an index for email lookups
+-- 4. One rating per user per item
+CREATE UNIQUE INDEX unique_vote ON ratings(user_id, item_id);
+
+-- 5. Index for email lookups
 CREATE UNIQUE INDEX idx_users_email ON users(email);

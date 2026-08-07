@@ -80,7 +80,7 @@ export default function CompletionScreen({
           <div className="text-center w-full px-2 shrink-0">
             <h2 className="text-[32px] sm:text-[40px] font-black leading-[1.1] mb-3 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent italic">
               YOU'VE RATED ALL <br />
-              <span className="text-[#8B5CF6]">11 STALLS!</span>
+              <span className="text-[#8B5CF6]">11 ITEMS!</span>
             </h2>
             <p className="text-white/60 text-lg leading-relaxed font-medium">
               Thank you for participating!

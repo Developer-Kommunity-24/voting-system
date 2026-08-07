@@ -30,13 +30,13 @@ export default function App() {
     return saved ? JSON.parse(saved) : {};
   });
   
-  const [ratedStalls, setRatedStalls] = useState<Array<{stallId: number, stallName: string, rating: number}>>(() => {
-    const saved = localStorage.getItem('ratedStalls');
+  const [ratedItems, setRatedItems] = useState<Array<{itemId: number, itemName: string, rating: number}>>(() => {
+    const saved = localStorage.getItem('ratedItems');
     return saved ? JSON.parse(saved) : [];
   });
-  const [currentStallData, setCurrentStallData] = useState<{ id: number, name: string, description: string, logo: string } | null>(null);
+  const [currentItemData, setCurrentItemData] = useState<{ id: number, name: string, description: string, logo: string } | null>(null);
 
-  const totalStalls = 11;
+  const totalItems = 11;
 
   // Sync user to DB after Clerk sign-in and fetch true progress
   useEffect(() => {
@@ -60,23 +60,23 @@ export default function App() {
           
           if (progJson.ratings && Array.isArray(progJson.ratings)) {
             const fetchedRatings: Record<string, number> = {};
-            const fetchedStalls: Array<{stallId: number, stallName: string, rating: number}> = [];
-            
-            progJson.ratings.forEach((r: { stallId: number, stallName: string, rating: number }) => {
-              fetchedRatings[r.stallId] = r.rating;
-              fetchedStalls.push({ stallId: r.stallId, stallName: r.stallName, rating: r.rating });
+            const fetchedItems: Array<{itemId: number, itemName: string, rating: number}> = [];
+
+            progJson.ratings.forEach((r: { itemId: number, itemName: string, rating: number }) => {
+              fetchedRatings[r.itemId] = r.rating;
+              fetchedItems.push({ itemId: r.itemId, itemName: r.itemName, rating: r.rating });
             });
-            
+
             setRatings(fetchedRatings);
-            setRatedStalls(fetchedStalls);
+            setRatedItems(fetchedItems);
             localStorage.setItem('ratings', JSON.stringify(fetchedRatings));
-            localStorage.setItem('ratedStalls', JSON.stringify(fetchedStalls));
+            localStorage.setItem('ratedItems', JSON.stringify(fetchedItems));
           } else {
              // If DB has 0 ratings, wipe the local cache to be completely accurate!
              setRatings({});
-             setRatedStalls([]);
+             setRatedItems([]);
              localStorage.setItem('ratings', JSON.stringify({}));
-             localStorage.setItem('ratedStalls', JSON.stringify([]));
+             localStorage.setItem('ratedItems', JSON.stringify([]));
           }
         }
       } catch (e) {
@@ -92,33 +92,33 @@ export default function App() {
   // Navigate based on auth state and URL params
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    let stallId = params.get('stallId');
+    let itemId = params.get('itemId');
 
-    if (!stallId && window.location.pathname !== '/' && window.location.pathname !== '') {
+    if (!itemId && window.location.pathname !== '/' && window.location.pathname !== '') {
       const pathSegments = window.location.pathname.split('/').filter(Boolean);
       if (pathSegments.length > 0) {
-        stallId = pathSegments[pathSegments.length - 1];
+        itemId = pathSegments[pathSegments.length - 1];
       }
     }
 
-    if (stallId) {
+    if (itemId) {
       if (isSignedIn) {
-        // Automatically verify and navigate to the stall
-        const fetchStallFromUrl = async () => {
+        // Automatically verify and navigate to the item
+        const fetchItemFromUrl = async () => {
           try {
             const token = await getToken();
-            const res = await fetch(`${API_BASE}/api/v1/stalls/${stallId}`, {
+            const res = await fetch(`${API_BASE}/api/v1/items/${itemId}`, {
               headers: { Authorization: `Bearer ${token}` }
             });
             const json = await res.json();
-            
+
             if (json.success && json.data) {
-              setCurrentStallData(json.data);
-              
+              setCurrentItemData(json.data);
+
               if (ratings[json.data.id] !== undefined) {
                 setFeedbackModal({
                   title: "Already Rated",
-                  message: "You have already submitted a rating for this stall. Please scan a different stall's QR code to continue voting!",
+                  message: "You have already submitted a rating for this item. Please scan a different item's QR code to continue voting!",
                   type: 'error'
                 });
                 setCurrentScreen('progress');
@@ -127,8 +127,8 @@ export default function App() {
               }
             } else {
               setFeedbackModal({
-                title: "Invalid Stall Link",
-                message: "The link you followed does not belong to a valid stall for this event.",
+                title: "Invalid Item Link",
+                message: "The link you followed does not belong to a valid item for this event.",
                 type: 'error'
               });
               setCurrentScreen('progress');
@@ -145,7 +145,7 @@ export default function App() {
         };
 
         setCurrentScreen('progress'); // Show loading state
-        fetchStallFromUrl();
+        fetchItemFromUrl();
         window.history.replaceState({}, document.title, '/');
       } else {
         setCurrentScreen('login');
@@ -159,7 +159,7 @@ export default function App() {
   }, [isSignedIn]);
 
   const handleRatingSubmit = async (rating: number) => {
-    if (!currentStallData) return;
+    if (!currentItemData) return;
 
     try {
       const token = await getToken();
@@ -169,21 +169,21 @@ export default function App() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ stallId: currentStallData.id, rating })
+        body: JSON.stringify({ itemId: currentItemData.id, rating })
       });
       const json = await res.json();
 
       if (json.success) {
-        const newRatings = { ...ratings, [currentStallData.id]: rating };
+        const newRatings = { ...ratings, [currentItemData.id]: rating };
         setRatings(newRatings);
         localStorage.setItem('ratings', JSON.stringify(newRatings));
-        
-        setRatedStalls(prev => {
-          const exists = prev.find(s => s.stallId === currentStallData.id);
-          const updated = exists 
-            ? prev.map(s => s.stallId === currentStallData.id ? { ...s, rating } : s)
-            : [...prev, { stallId: currentStallData.id, stallName: currentStallData.name, rating }];
-          localStorage.setItem('ratedStalls', JSON.stringify(updated));
+
+        setRatedItems(prev => {
+          const exists = prev.find(i => i.itemId === currentItemData.id);
+          const updated = exists
+            ? prev.map(i => i.itemId === currentItemData.id ? { ...i, rating } : i)
+            : [...prev, { itemId: currentItemData.id, itemName: currentItemData.name, rating }];
+          localStorage.setItem('ratedItems', JSON.stringify(updated));
           return updated;
         });
         
@@ -192,11 +192,11 @@ export default function App() {
           
           setFeedbackModal({
             title: "Vote Recorded!",
-            message: `You successfully rated ${currentStallData.name}! Your progress has been updated.`,
+            message: `You successfully rated ${currentItemData.name}! Your progress has been updated.`,
             type: 'success'
           });
 
-          if (next >= totalStalls) {
+          if (next >= totalItems) {
             setCurrentScreen('completion');
           } else {
             setCurrentScreen('progress');
@@ -223,41 +223,41 @@ export default function App() {
   };
 
   const handleScanSuccess = async (decodedText: string) => {
-    let stallSlug = decodedText.trim();
-    
+    let itemSlug = decodedText.trim();
+
     try {
-      const urlToParse = stallSlug.includes('://') ? stallSlug : `https://${stallSlug}`;
+      const urlToParse = itemSlug.includes('://') ? itemSlug : `https://${itemSlug}`;
       const url = new URL(urlToParse);
-      
-      if (url.searchParams.has('stallId')) {
-        stallSlug = url.searchParams.get('stallId') || decodedText;
+
+      if (url.searchParams.has('itemId')) {
+        itemSlug = url.searchParams.get('itemId') || decodedText;
       } else {
         const pathSegments = url.pathname.split('/').filter(Boolean);
         if (pathSegments.length > 0) {
-          stallSlug = pathSegments[pathSegments.length - 1];
+          itemSlug = pathSegments[pathSegments.length - 1];
         } else {
-          stallSlug = decodedText;
+          itemSlug = decodedText;
         }
       }
     } catch {
-      const parts = stallSlug.split('?')[0].split('/').filter(Boolean);
-      stallSlug = parts[parts.length - 1] || decodedText;
+      const parts = itemSlug.split('?')[0].split('/').filter(Boolean);
+      itemSlug = parts[parts.length - 1] || decodedText;
     }
 
     try {
       const token = await getToken();
-      const res = await fetch(`${API_BASE}/api/v1/stalls/${stallSlug}`, {
+      const res = await fetch(`${API_BASE}/api/v1/items/${itemSlug}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const json = await res.json();
-      
+
       if (json.success && json.data) {
-        setCurrentStallData(json.data);
-        
+        setCurrentItemData(json.data);
+
         if (ratings[json.data.id] !== undefined) {
           setFeedbackModal({
             title: "Already Rated",
-            message: "You have already submitted a rating for this stall. Please scan a different stall's QR code to continue voting!",
+            message: "You have already submitted a rating for this item. Please scan a different item's QR code to continue voting!",
             type: 'error'
           });
           setCurrentScreen('progress');
@@ -266,8 +266,8 @@ export default function App() {
         }
       } else {
         setFeedbackModal({
-          title: "Invalid Stall",
-          message: "The QR code you scanned does not belong to a valid stall for this event.",
+          title: "Invalid Item",
+          message: "The QR code you scanned does not belong to a valid item for this event.",
           type: 'error'
         });
         setCurrentScreen('progress');
@@ -340,21 +340,21 @@ export default function App() {
           />
         )}
 
-        {currentScreen === 'rating' && currentStallData && (
+        {currentScreen === 'rating' && currentItemData && (
           <RatingScreen
-            stallData={currentStallData}
+            itemData={currentItemData}
             onSubmitSuccess={handleRatingSubmit}
             ratedCount={serverProgress}
-            totalCount={totalStalls}
+            totalCount={totalItems}
           />
         )}
 
         {currentScreen === 'progress' && (
           <ProgressScreen
             ratings={ratings}
-            ratedStalls={ratedStalls}
+            ratedItems={ratedItems}
             onScanNext={() => setCurrentScreen('scanner')}
-            totalCount={totalStalls}
+            totalCount={totalItems}
             serverProgress={serverProgress}
             
           />

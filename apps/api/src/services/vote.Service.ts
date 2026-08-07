@@ -4,7 +4,7 @@ import { ratings, users } from '../db/schema'
 import { eq, count } from 'drizzle-orm'
 import type { AppEnv } from '../types'
 import { ensureUserExists } from './user.Service'
-import { refreshStallAggregates } from './stalls.Service'
+import { refreshItemAggregates } from './items.Service'
 function isVotingOpen(): boolean {
   const istOffset = 5.5 * 60 * 60 * 1000;
   const istTime = new Date(Date.now() + istOffset);
@@ -42,7 +42,7 @@ export const submitVote = async (
     throw new Error('Voting is currently closed');
   }
 
-  const { stallId, rating } = vote
+  const { itemId, rating } = vote
   const ormDb = getDb(env.DB)
 
   try {
@@ -50,7 +50,7 @@ export const submitVote = async (
     await ensureUserExists(env, userId)
 
     // 2. Now proceed with the vote
-    await ormDb.insert(ratings).values({ userId, stallId, rating })
+    await ormDb.insert(ratings).values({ userId, itemId, rating })
   } catch (e: any) {
     if (e.message && e.message.includes('UNIQUE constraint failed')) {
       throw new Error('Already voted')
@@ -74,22 +74,22 @@ export const submitVote = async (
         .where(eq(users.id, userId))
     }
 
-    // Update stall aggregates immediately
+    // Update item aggregates immediately
     if (progressCount === 11) {
-      // User just became qualified! All their stalls need refreshing
+      // User just became qualified! All their items need refreshing
       const userRatings = await ormDb
-        .select({ stallId: ratings.stallId })
+        .select({ itemId: ratings.itemId })
         .from(ratings)
         .where(eq(ratings.userId, userId));
 
-      const stallIds = userRatings
-        .map(r => r.stallId)
+      const itemIds = userRatings
+        .map(r => r.itemId)
         .filter((id): id is number => id !== null);
 
-      await refreshStallAggregates(env.DB, stallIds);
+      await refreshItemAggregates(env.DB, itemIds);
     } else {
-      // Normal vote (could be qualified or not, but only this stall is affected)
-      await refreshStallAggregates(env.DB, [stallId]);
+      // Normal vote (could be qualified or not, but only this item is affected)
+      await refreshItemAggregates(env.DB, [itemId]);
     }
 
     return progressCount

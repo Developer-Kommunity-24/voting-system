@@ -1,5 +1,5 @@
 export interface VoteRequest {
-    stallId: number;
+    itemId: number;
     rating: number;
 }
 
