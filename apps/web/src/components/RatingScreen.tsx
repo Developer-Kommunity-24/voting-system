@@ -3,13 +3,13 @@ import { motion } from 'motion/react';
 import { Send } from 'lucide-react';
 
 interface RatingScreenProps {
-  stallData: { id: number; name: string; description: string; logo: string | null };
+  itemData: { id: number; name: string; description: string; logo: string | null };
   onSubmitSuccess?: (rating: number) => void;
   ratedCount?: number;
   totalCount?: number;
 }
 
-export default function RatingScreen({ stallData, onSubmitSuccess }: RatingScreenProps) {
+export default function RatingScreen({ itemData, onSubmitSuccess }: RatingScreenProps) {
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -60,15 +60,15 @@ export default function RatingScreen({ stallData, onSubmitSuccess }: RatingScree
         </div>
 
         <main className="flex-1 w-full max-w-lg mx-auto flex flex-col px-6 pt-16 sm:pt-24 pb-32 relative z-20">
-          {/* CURRENT STALL */}
+          {/* CURRENT ITEM */}
           <div className="flex items-center gap-4 justify-center mb-3 mt-4">
             <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-blue-400/60" />
-            <span className="text-[11px] uppercase tracking-[0.25em] font-semibold text-blue-100/90 shadow-blue-500 max-w-min text-center whitespace-nowrap">Current Stall</span>
+            <span className="text-[11px] uppercase tracking-[0.25em] font-semibold text-blue-100/90 shadow-blue-500 max-w-min text-center whitespace-nowrap">Current Item</span>
             <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-blue-400/60" />
           </div>
 
           <h2 className="text-3xl sm:text-4xl font-bold font-display text-center tracking-tight bg-gradient-to-r from-rose-400 via-purple-300 to-cyan-300 bg-clip-text text-transparent mb-8 pb-1 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-            {stallData.name}
+            {itemData.name}
           </h2>
 
           {/* Info Card */}
@@ -93,7 +93,7 @@ export default function RatingScreen({ stallData, onSubmitSuccess }: RatingScree
             <div className="flex items-start gap-3 bg-white/5 border border-white/10 rounded-xl p-3 relative z-10">
               <span className="text-amber-400 text-base leading-none drop-shadow-[0_0_8px_rgba(251,191,36,0.6)] pt-0.5">⚠️</span>
               <p className="text-white/70 text-[13px] font-medium leading-relaxed">
-                Your votes will be counted only if you rate <span className="text-white font-bold">all 11 stalls</span>.
+                Your votes will be counted only if you rate <span className="text-white font-bold">all 11 items</span>.
               </p>
             </div>
           </div>
@@ -267,7 +267,7 @@ export default function RatingScreen({ stallData, onSubmitSuccess }: RatingScree
                 <div className="h-[1px] w-10 bg-gradient-to-l from-transparent to-white/30" />
               </div>
               <p className="text-white/70 text-[13px] sm:text-sm leading-relaxed text-center">
-                {stallData.description || "Innovating sustainable hardware for the next digital era."}
+                {itemData.description || "Innovating sustainable hardware for the next digital era."}
               </p>
             </div>
           </div>

@@ -13,10 +13,10 @@ export const createVote = async (c: Context<AppEnv>) => {
     return c.json({ success: false, message: 'Invalid JSON body' }, 400)
   }
 
-  const { stallId, rating } = body
+  const { itemId, rating } = body
 
-  if (typeof stallId !== 'number' || typeof rating !== 'number') {
-    return c.json({ success: false, message: 'stallId and rating must be numbers' }, 400)
+  if (typeof itemId !== 'number' || typeof rating !== 'number') {
+    return c.json({ success: false, message: 'itemId and rating must be numbers' }, 400)
   }
 
   if (rating < 0 || rating > 10) {

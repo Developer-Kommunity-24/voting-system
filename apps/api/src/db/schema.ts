@@ -8,7 +8,7 @@ export const users = sqliteTable('users', {
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
-export const stalls = sqliteTable('stalls', {
+export const items = sqliteTable('items', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
   description: text('description'),
@@ -25,11 +25,11 @@ export const stalls = sqliteTable('stalls', {
 export const ratings = sqliteTable('ratings', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   userId: text('user_id').notNull().references(() => users.id),
-  stallId: integer('stall_id').notNull().references(() => stalls.id),
+  itemId: integer('item_id').notNull().references(() => items.id),
   rating: integer('rating').notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 },
  (table) => ({
-  unq: uniqueIndex('unique_vote').on(table.userId, table.stallId),
+  unq: uniqueIndex('unique_vote').on(table.userId, table.itemId),
 })
 );

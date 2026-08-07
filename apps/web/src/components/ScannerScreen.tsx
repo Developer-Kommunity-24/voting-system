@@ -140,8 +140,8 @@ export default function ScannerScreen({ onScanSuccess, onClose }: ScannerScreenP
           </div>
 
         <div className="mt-auto mb-12 text-center px-8 z-20 relative bg-black/40 p-4 rounded-xl backdrop-blur-md max-w-sm">
-          <h2 className="text-xl font-bold mb-2 drop-shadow-lg">Scan Stall QR Code</h2>
-          <p className="text-white/80 text-sm drop-shadow-md">Align the QR code within the frame to start rating the stall.</p>
+          <h2 className="text-xl font-bold mb-2 drop-shadow-lg">Scan Item QR Code</h2>
+          <p className="text-white/80 text-sm drop-shadow-md">Align the QR code within the frame to start rating the item.</p>
         </div>
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function ScannerScreen({ onScanSuccess, onClose }: ScannerScreenP
             <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
               <QrCode className="w-10 h-10 text-emerald-500" />
             </div>
-            <h3 className="text-2xl font-bold">Stall Identified!</h3>
+            <h3 className="text-2xl font-bold">Item Identified!</h3>
             <p className="opacity-80">Redirecting to rating page...</p>
           </motion.div>
         </motion.div>

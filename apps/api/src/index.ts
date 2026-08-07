@@ -5,7 +5,7 @@ import type { AppEnv } from './types'
 import voteRoutes from './routes/vote.route'
 import healthRoutes from './routes/health.route'
 import progressRoutes from './routes/progress.route'
-import stallsRoutes from './routes/stalls.route'
+import itemsRoutes from './routes/items.route'
 import resultsRoutes from './routes/results.route'
 import userRoutes from './routes/user.route'
 import webhookRoutes from './routes/webhook.route'
@@ -80,7 +80,7 @@ const api = app.basePath('/api/v1')
 api.route('/vote', voteRoutes)
 api.route('/health', healthRoutes)
 api.route('/progress', progressRoutes)
-api.route('/stalls', stallsRoutes)
+api.route('/items', itemsRoutes)
 api.route('/results', resultsRoutes)
 api.route('/user', userRoutes)
 

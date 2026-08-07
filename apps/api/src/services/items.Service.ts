@@ -1,29 +1,29 @@
 import { getDb } from '../db/client'
-import { stalls, ratings } from '../db/schema'
+import { items, ratings } from '../db/schema'
 import { eq, inArray, count } from 'drizzle-orm'
 
-export const fetchStall = async (db: D1Database, slug: string) => {
+export const fetchItem = async (db: D1Database, slug: string) => {
   const ormDb = getDb(db)
-  const result = await ormDb.select().from(stalls).where(eq(stalls.qrSlug, slug)).limit(1)
+  const result = await ormDb.select().from(items).where(eq(items.qrSlug, slug)).limit(1)
   return result[0] || null
 }
 
-export const refreshStallAggregates = async (db: D1Database, stallIds: number[]) => {
-  if (stallIds.length === 0) return;
+export const refreshItemAggregates = async (db: D1Database, itemIds: number[]) => {
+  if (itemIds.length === 0) return;
   const ormDb = getDb(db);
 
-  // 1. Get all ratings for these stalls
+  // 1. Get all ratings for these items
   const targetRatings = await ormDb
     .select()
     .from(ratings)
-    .where(inArray(ratings.stallId, stallIds));
+    .where(inArray(ratings.itemId, itemIds));
 
-  // 2. Get qualification status for all users who voted for these stalls
+  // 2. Get qualification status for all users who voted for these items
   const userIds = [...new Set(targetRatings.map(r => r.userId))];
   if (userIds.length === 0) {
-    // If no ratings left, reset stalls (unlikely in this context but good for robustness)
-    for (const id of stallIds) {
-      await ormDb.update(stalls)
+    // If no ratings left, reset items (unlikely in this context but good for robustness)
+    for (const id of itemIds) {
+      await ormDb.update(items)
         .set({
           totalVoters: 0,
           qualifiedVoters: 0,
@@ -31,7 +31,7 @@ export const refreshStallAggregates = async (db: D1Database, stallIds: number[])
           nonQualifiedRatingSum: 0,
           qualifiedAvgRating: 0
         })
-        .where(eq(stalls.id, id));
+        .where(eq(items.id, id));
     }
     return;
   }
@@ -51,7 +51,7 @@ export const refreshStallAggregates = async (db: D1Database, stallIds: number[])
       .map(u => u.userId)
   );
 
-  // 3. Aggregate per stall
+  // 3. Aggregate per item
   const aggregates = new Map<number, {
     totalVoters: number;
     qualifiedVoters: number;
@@ -59,7 +59,7 @@ export const refreshStallAggregates = async (db: D1Database, stallIds: number[])
     nonQualifiedRatingSum: number;
   }>();
 
-  for (const id of stallIds) {
+  for (const id of itemIds) {
     aggregates.set(id, {
       totalVoters: 0,
       qualifiedVoters: 0,
@@ -69,8 +69,8 @@ export const refreshStallAggregates = async (db: D1Database, stallIds: number[])
   }
 
   for (const rating of targetRatings) {
-    if (!rating.stallId) continue;
-    const agg = aggregates.get(rating.stallId);
+    if (!rating.itemId) continue;
+    const agg = aggregates.get(rating.itemId);
     if (!agg) continue;
 
     agg.totalVoters += 1;
@@ -83,13 +83,13 @@ export const refreshStallAggregates = async (db: D1Database, stallIds: number[])
   }
 
   // 4. Update the database
-  await Promise.all(stallIds.map(async (id) => {
+  await Promise.all(itemIds.map(async (id) => {
     const agg = aggregates.get(id)!;
-    const qualifiedAvgRating = agg.qualifiedVoters > 0 
-      ? Math.round((agg.qualifiedRatingSum / agg.qualifiedVoters) * 100) / 100 
+    const qualifiedAvgRating = agg.qualifiedVoters > 0
+      ? Math.round((agg.qualifiedRatingSum / agg.qualifiedVoters) * 100) / 100
       : 0;
 
-    await ormDb.update(stalls)
+    await ormDb.update(items)
       .set({
         totalVoters: agg.totalVoters,
         qualifiedVoters: agg.qualifiedVoters,
@@ -97,6 +97,6 @@ export const refreshStallAggregates = async (db: D1Database, stallIds: number[])
         nonQualifiedRatingSum: agg.nonQualifiedRatingSum,
         qualifiedAvgRating: qualifiedAvgRating,
       })
-      .where(eq(stalls.id, id));
+      .where(eq(items.id, id));
   }));
 }

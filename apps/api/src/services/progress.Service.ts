@@ -1,5 +1,5 @@
 import { getDb } from '../db/client'
-import { ratings, users, stalls } from '../db/schema'
+import { ratings, users, items } from '../db/schema'
 import { eq, count } from 'drizzle-orm'
 
 export const fetchProgress = async (db: D1Database, userId: string) => {
@@ -13,12 +13,12 @@ export const fetchProgress = async (db: D1Database, userId: string) => {
 
   const userRatings = await ormDb
     .select({
-      stallId: stalls.id,
-      stallName: stalls.name,
+      itemId: items.id,
+      itemName: items.name,
       rating: ratings.rating
     })
     .from(ratings)
-    .innerJoin(stalls, eq(ratings.stallId, stalls.id))
+    .innerJoin(items, eq(ratings.itemId, items.id))
     .where(eq(ratings.userId, userId))
 
   return { userId, progress: progressCount, isCompleted, ratings: userRatings }

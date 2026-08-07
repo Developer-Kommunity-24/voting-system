@@ -18,10 +18,10 @@ interface ProgressScreenProps {
   onProfile?: () => void;
   onScanNext?: () => void;
   ratings?: Record<string, number>;
-  ratedStalls?: Array<{ stallId: number, stallName: string, rating: number }>;
+  ratedItems?: Array<{ itemId: number, itemName: string, rating: number }>;
   totalCount?: number;
   serverProgress?: number;
-  allStalls?: Array<{ id: number, name: string }>;
+  allItems?: Array<{ id: number, name: string }>;
 }
 
 export default function ProgressScreen({
@@ -29,7 +29,7 @@ export default function ProgressScreen({
   ratings = {},
   totalCount = 11,
   serverProgress = 0,
-  //allStalls: _allStalls = []
+  //allItems: _allItems = []
 }: ProgressScreenProps) {
   // Always use the server's synced progress as the ultimate source of truth
   const localRatedCount = Object.keys(ratings).length;
@@ -78,7 +78,7 @@ export default function ProgressScreen({
               </div>
 
               <div className="mb-6 flex items-center justify-between">
-                <h3 className="text-xl font-bold font-display text-white/90">Stall Directory</h3>
+                <h3 className="text-xl font-bold font-display text-white/90">Item Directory</h3>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Live Updates</span>
@@ -87,12 +87,12 @@ export default function ProgressScreen({
 
               <div className="grid grid-cols-6 gap-2">
                 {Array.from({ length: totalCount }).map((_, index) => {
-                  const stallId = index + 1;
+                  const itemId = index + 1;
                   const status = index < ratedCount ? 'rated' : 'locked';
 
                   return (
                     <motion.div
-                      key={`slot-${stallId}`}
+                      key={`slot-${itemId}`}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: index * 0.02 }}
@@ -132,7 +132,7 @@ export default function ProgressScreen({
             >
               <span className="text-amber-400 text-sm leading-none drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">⚠️</span>
               <p className="text-white/70 text-[11px] font-medium leading-none m-0">
-                Your votes will be counted only if you rate <span className="text-white font-bold">all 11 stalls</span>.
+                Your votes will be counted only if you rate <span className="text-white font-bold">all 11 items</span>.
               </p>
             </motion.div>
 
@@ -152,7 +152,7 @@ export default function ProgressScreen({
                 className="w-full py-5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl text-white font-bold flex items-center justify-center gap-3 shadow-xl shadow-emerald-500/20 uppercase tracking-widest text-sm border border-emerald-300/30"
               >
                 <CheckCircle2 className="w-5 h-5" />
-                <span>All Stalls Rated!</span>
+                <span>All Items Rated!</span>
               </div>
             )}
 
