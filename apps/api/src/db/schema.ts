@@ -6,6 +6,7 @@ export const users = sqliteTable('users', {
   name: text('name'),
   completed: integer('completed', { mode: 'boolean' }).default(false),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  is_admin:integer('is_admin', { mode: 'boolean' }).default(0),
 });
 
 export const items = sqliteTable('items', {
@@ -21,7 +22,12 @@ export const items = sqliteTable('items', {
   qualifiedAvgRating: real('qualified_avg_rating').default(0),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
-
+  export const settings = sqliteTable('settings', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  key: text('key').unique().notNull(),
+  value: text('value'),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
 export const ratings = sqliteTable('ratings', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   userId: text('user_id').notNull().references(() => users.id),
@@ -29,6 +35,7 @@ export const ratings = sqliteTable('ratings', {
   rating: integer('rating').notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 },
+
  (table) => ({
   unq: uniqueIndex('unique_vote').on(table.userId, table.itemId),
 })

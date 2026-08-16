@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { clerkMiddleware } from '@hono/clerk-auth'
+import { clerkMiddleware } from '@clerk/hono'
 import type { AppEnv } from './types'
 
 import voteRoutes from './routes/vote.route'
@@ -10,7 +10,9 @@ import resultsRoutes from './routes/results.route'
 import userRoutes from './routes/user.route'
 import webhookRoutes from './routes/webhook.route'
 import { cors } from 'hono/cors'
+import adminRoutes from './routes/admin.route'
 
+// Mount under /api/v1/admin
 const app = new Hono<AppEnv>()
 
 const port = 8000;
@@ -18,6 +20,7 @@ const port = 8000;
 //using cors and clerk middleware
 app.use('*', cors())
 app.use('*', clerkMiddleware())
+
 app.all('/__clerk/*', async (c) => {
   const url = new URL(c.req.url);
 
@@ -72,8 +75,6 @@ app.all('/__clerk/*', async (c) => {
 // Webhook route must come before clerkMiddleware
 app.route('/webhooks', webhookRoutes)
 
-app.use('*', clerkMiddleware())
-
 //protected api group
 const api = app.basePath('/api/v1')
 
@@ -83,7 +84,8 @@ api.route('/progress', progressRoutes)
 api.route('/items', itemsRoutes)
 api.route('/results', resultsRoutes)
 api.route('/user', userRoutes)
-
+api.route('/admin', adminRoutes)
+app.get('/', (c) => c.json({ ok: true }))
 export default {
   port,
   fetch: app.fetch,

@@ -5,7 +5,11 @@ compatibility_flags = ["nodejs_compat"]
 
 [dev]
 port = 8000
+
 [[d1_databases]]
 binding = "DB"
 database_name = "vote-system"
 database_id = "832b59da-1bf5-45cf-b5d1-b4935b625394"
+
+[vars]
+ADMIN_EMAILS = "you@example.com"
