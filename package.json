@@ -9,5 +9,8 @@
   },
   "devDependencies": {
     "turbo": "latest"
+  },
+  "dependencies": {
+    "@clerk/hono": "^0.1.67"
   }
 }

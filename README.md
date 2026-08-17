@@ -30,12 +30,14 @@ voting-system/
 ## 🚀 Quick Start (Local Development)
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/Kaushik4141/voting-system.git
    cd voting-system
    ```
 
 2. **Install dependencies:**
+
    ```bash
    pnpm install
    ```
@@ -43,7 +45,6 @@ voting-system/
 3. **Configure environment variables:**
    - Frontend (`apps/web`): Copy `.env.example` to `.env`
    - Backend (`apps/api`): Copy `.dev.vars.example` to `.dev.vars`
-
 
 4. **Start development servers:**
    ```bash
@@ -54,11 +55,25 @@ voting-system/
 
 ## 🌐 Self-Deployment & Infrastructure Guide
 
-Planning to deploy your own instance of the Voting System? 
+Planning to deploy your own instance of the Voting System?
 
 Check out our comprehensive **[Self-Deployment & Infrastructure Guide](./DEPLOYMENT.md)** for detailed instructions on:
+
 - Cloudflare Pages & Workers deployment
 - Custom Domain & DNS configuration
 - Cloudflare D1 Database migrations
 - Clerk Authentication setup & Webhooks user synchronization
 
+### Manual admin promotion (fallback)
+
+If `ADMIN_EMAILS` wasn't set at deploy time:
+
+```bash
+npx wrangler d1 execute vote-system --command "UPDATE users SET is_admin = 1 WHERE email = 'user@example.com'"
+```
+
+## Admin setup
+
+### First admin (automatic)
+
+Set `ADMIN_EMAILS` as a comma-separated list in your Worker environment:
