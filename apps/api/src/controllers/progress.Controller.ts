@@ -3,14 +3,20 @@ import type { AppEnv } from '../types'
 import { fetchProgress } from '../services/progress.Service'
 
 export const getProgress = async (c: Context<AppEnv>) => {
-  const userId = c.req.param('userId')
+  const paramUserId = c.req.param('userId')
+  const tokenUserId = c.get('userId')  // set by requireAuth middleware
 
-  if (!userId) {
+  if (!paramUserId) {
     return c.json({ success: false, message: 'userId is required' }, 400)
   }
 
+  // Reject IDOR: param must match the authenticated user
+  if (tokenUserId !== paramUserId) {
+    return c.json({ success: false, error: 'Forbidden' }, 403)
+  }
+
   try {
-    const data = await fetchProgress(c.env.DB, userId)
+    const data = await fetchProgress(c.env.DB, paramUserId)
     return c.json(data)
   } catch (e: any) {
     console.error('Progress error:', e)

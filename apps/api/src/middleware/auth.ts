@@ -1,6 +1,6 @@
 import { getAuth } from '@clerk/hono'
 import { createMiddleware } from 'hono/factory'
-import { createClerkClient } from '@clerk/backend'  // FIX: was clerkClient
+import { createClerkClient } from '@clerk/backend' 
 import type { AppEnv } from '../types'
 import { ensureUserExists } from '../utils/user'
 
