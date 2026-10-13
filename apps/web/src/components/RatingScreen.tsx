@@ -63,7 +63,7 @@ export default function RatingScreen({ itemData, onSubmitSuccess }: RatingScreen
           {/* CURRENT ITEM */}
           <div className="flex items-center gap-4 justify-center mb-3 mt-4">
             <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-blue-400/60" />
-            <span className="text-[11px] uppercase tracking-[0.25em] font-semibold text-blue-100/90 shadow-blue-500 max-w-min text-center whitespace-nowrap">Current Item</span>
+            <span className="text-xs uppercase tracking-[0.25em] font-semibold text-blue-100/90 shadow-blue-500 max-w-min text-center whitespace-nowrap">Current Item</span>
             <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-blue-400/60" />
           </div>
 
@@ -177,7 +177,7 @@ export default function RatingScreen({ itemData, onSubmitSuccess }: RatingScreen
                   ? `bg-white text-black shadow-2xl`
                   : isSubmitted
                     ? 'bg-emerald-500 text-white'
-                    : 'bg-white/5 border border-white/10 text-white/30 cursor-not-allowed backdrop-blur-sm'}
+                    : 'bg-white/5 border border-white/10 text-white/60 cursor-not-allowed backdrop-blur-sm'}
               `}
               style={{
                 minWidth: "220px"
@@ -195,7 +195,7 @@ export default function RatingScreen({ itemData, onSubmitSuccess }: RatingScreen
           <div className="mt-4 flex flex-col items-center gap-5 relative z-10">
             {/* Powered By Section */}
             <div className="flex flex-col items-center">
-              <span className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-40 text-center font-display mb-3">
+              <span className="text-xs uppercase tracking-[0.2em] font-bold opacity-60 text-center font-display mb-3">
                 Powered By
               </span>
               <a
@@ -214,7 +214,7 @@ export default function RatingScreen({ itemData, onSubmitSuccess }: RatingScreen
 
             {/* In Collaboration Section */}
             <div className="flex flex-col items-center mb-4">
-              <span className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-40 text-center font-display mb-4">
+              <span className="text-xs uppercase tracking-[0.2em] font-bold opacity-60 text-center font-display mb-4">
                 In Collaboration with
               </span>
               <div className="flex items-center justify-center gap-5 sm:gap-8">
@@ -263,7 +263,7 @@ export default function RatingScreen({ itemData, onSubmitSuccess }: RatingScreen
             <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl border border-white/20 p-6 relative shadow-lg">
               <div className="flex items-center gap-4 justify-center mb-5">
                 <div className="h-[1px] w-10 bg-gradient-to-r from-transparent to-white/30" />
-                <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-white/50">About this Startup</span>
+                <span className="text-xs uppercase tracking-[0.2em] font-semibold text-white/60">About this Startup</span>
                 <div className="h-[1px] w-10 bg-gradient-to-l from-transparent to-white/30" />
               </div>
               <p className="text-white/70 text-[13px] sm:text-sm leading-relaxed text-center">

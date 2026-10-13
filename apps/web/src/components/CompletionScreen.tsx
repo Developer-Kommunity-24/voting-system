@@ -67,11 +67,11 @@ export default function CompletionScreen({
                 <CheckCircle2 className="w-7 h-7 text-[#8B5CF6]" />
               </div>
               <div className="flex-1 min-w-0">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#8B5CF6] block mb-1 font-display">VOTED</span>
+                <span className="text-xs font-bold uppercase tracking-widest text-[#8B5CF6] block mb-1 font-display">VOTED</span>
                 <div className="flex items-baseline gap-1">
                   <span className="text-3xl font-black text-slate-800">11/11</span>
                 </div>
-                <span className="text-[11px] font-medium text-slate-400">Rating Success</span>
+                <span className="text-xs font-medium text-slate-600">Rating Success</span>
               </div>
             </motion.div>
           </div>
@@ -101,7 +101,7 @@ export default function CompletionScreen({
           <div className="flex flex-col items-center gap-6 relative z-10 w-full shrink-0">
             {/* Powered By Section */}
             <div className="flex flex-col items-center">
-              <span className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-30 text-center font-display mb-3">
+              <span className="text-xs uppercase tracking-[0.2em] font-bold opacity-60 text-center font-display mb-3">
                 Powered By
               </span>
               <a
@@ -120,7 +120,7 @@ export default function CompletionScreen({
 
             {/* In Collaboration Section */}
             <div className="flex flex-col items-center">
-              <span className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-30 text-center font-display mb-3">
+              <span className="text-xs uppercase tracking-[0.2em] font-bold opacity-60 text-center font-display mb-3">
                 In Collaboration with
               </span>
               <div className="flex items-center justify-center gap-6 sm:gap-8">

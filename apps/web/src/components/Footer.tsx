@@ -20,7 +20,7 @@ export default function Footer({
 
         {/* POWERED BY */}
         <div className="flex flex-col items-center">
-          <span className="text-[10px] sm:text-[12px] uppercase tracking-[0.2em] font-bold opacity-70 text-center mb-2">
+          <span className="text-xs uppercase tracking-[0.2em] font-bold opacity-70 text-center mb-2">
             Powered By
           </span>
 
@@ -40,7 +40,7 @@ export default function Footer({
 
         {/* COLLAB */}
         <div className="flex flex-col items-center">
-          <span className="text-[10px] sm:text-[12px] uppercase tracking-[0.2em] font-bold opacity-70 text-center mb-2 sm:mb-3">
+          <span className="text-xs uppercase tracking-[0.2em] font-bold opacity-70 text-center mb-2 sm:mb-3">
             In Collaboration With
           </span>
 
