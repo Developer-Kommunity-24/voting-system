@@ -81,7 +81,7 @@ export default function ProgressScreen({
                 <h3 className="text-xl font-bold font-display text-white/90">Item Directory</h3>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Live Updates</span>
+                  <span className="text-xs font-bold text-white/60 uppercase tracking-widest">Live Updates</span>
                 </div>
               </div>
 
@@ -99,14 +99,14 @@ export default function ProgressScreen({
                       className={cn(
                         "aspect-square rounded-xl flex flex-col items-center justify-center border transition-all relative overflow-hidden",
                         status === 'locked'
-                          ? 'bg-white/5 border-white/5 opacity-40'
+                          ? 'bg-white/5 border-white/5 opacity-60'
                           : 'bg-white/10 border-white/20 shadow-lg'
                       )}
                     >
                       {status === 'rated' ? (
                         <CheckCircle2 className="w-5 h-5 text-[#00E5FF] drop-shadow-[0_0_8px_rgba(0,229,255,0.4)]" />
                       ) : (
-                        <Lock className="w-4 h-4 text-white/20" />
+                        <Lock className="w-4 h-4 text-white/60" />
                       )}
 
                       {status === 'rated' && (
@@ -131,7 +131,7 @@ export default function ProgressScreen({
               className="flex items-center justify-center gap-3 mb-6"
             >
               <span className="text-amber-400 text-sm leading-none drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">⚠️</span>
-              <p className="text-white/70 text-[11px] font-medium leading-none m-0">
+              <p className="text-white/70 text-xs font-medium leading-none m-0">
                 Your votes will be counted only if you rate <span className="text-white font-bold">all 11 items</span>.
               </p>
             </motion.div>
@@ -160,7 +160,7 @@ export default function ProgressScreen({
             <div className="mt-4 flex flex-col items-center gap-5 relative z-10">
               {/* Powered By Section */}
               <div className="flex flex-col items-center">
-                <span className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-40 text-center font-display mb-3">
+                <span className="text-xs uppercase tracking-[0.2em] font-bold opacity-60 text-center font-display mb-3">
                   Powered By
                 </span>
                 <a
@@ -179,7 +179,7 @@ export default function ProgressScreen({
 
               {/* In Collaboration Section */}
               <div className="flex flex-col items-center mb-4">
-                <span className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-40 text-center font-display mb-4">
+                <span className="text-xs uppercase tracking-[0.2em] font-bold opacity-60 text-center font-display mb-4">
                   In Collaboration with
                 </span>
                 <div className="flex items-center justify-center gap-5 sm:gap-8">
